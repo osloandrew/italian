@@ -3,21 +3,21 @@ let results = [];
 let isEnglishVisible = true;
 let latestMultipleResults = null;
 const resultsContainer = document.getElementById("results-container");
-// Language + schema for Spanish
-const APP_LANG = "es";
+// Language + schema for Italian
+const APP_LANG = "it";
 
 // Map incoming CSV headers to the app’s canonical keys
 const SCHEMA_MAP = {
-  ord: "palabra",
-  engelsk: "inglés",
+  ord: "parola",
+  engelsk: "inglese",
   CEFR: "CEFR",
-  gender: "artículo",
-  uttale: null, // not in Spanish CSV
-  etymologi: null, // not in Spanish CSV
-  definisjon: "definición",
-  eksempel: "ejemplo",
-  sentenceTranslation: "traducción",
-  region: "región", // optional extra; stored for future use
+  gender: "articolo",
+  uttale: null, // not in Italian CSV
+  etymologi: null, // not in Italian CSV
+  definisjon: null,
+  eksempel: "esempio",
+  sentenceTranslation: "traduzione",
+  region: null, // optional extra; stored for future use
 };
 
 // Function to show or hide the landing card
@@ -193,7 +193,7 @@ function clearInput() {
 async function fetchAndLoadDictionaryData() {
   try {
     console.log("Attempting to load data from local CSV file...");
-    const localResponse = await fetch("spanishWords.csv");
+    const localResponse = await fetch("italianWords.csv");
     if (!localResponse.ok)
       throw new Error(`HTTP error! Status: ${localResponse.status}`);
     const localData = await localResponse.text();
