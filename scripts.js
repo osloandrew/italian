@@ -461,55 +461,63 @@ async function randomWord() {
 function generateInexactMatches(query) {
   const variations = [query.toLowerCase().trim()]; // Always include the base query
 
-  // Handle common suffixes like 'ing', 'ed', etc.
+  // Italian grammatical endings (common noun, adjective, verb patterns)
   const suffixes = [
-    // plurals
-    "s",
-    "es",
+    // noun/adjective gender/number
+    "o",
+    "a",
+    "i",
+    "e",
+
+    // diminutives/augmentatives (very common)
+    "ino",
+    "ina",
+    "ini",
+    "ine",
+    "etto",
+    "etta",
+    "etti",
+    "ette",
+    "one",
+    "oni",
+
     // adverbs
     "mente",
-    // adjective gender/number
-    "o",
-    "a",
-    "os",
-    "as",
-    // common diminutives
+
+    // verb infinitives
+    "are",
+    "ere",
+    "ire",
+
+    // participles and gerunds
+    "ato",
+    "ata",
+    "ati",
+    "ate",
+    "uto",
+    "uta",
+    "uti",
+    "ute",
     "ito",
     "ita",
-    "itos",
-    "itas",
-    // participles and gerunds
-    "ado",
-    "ada",
-    "ados",
-    "adas",
-    "ido",
-    "ida",
-    "idos",
-    "idas",
+    "iti",
+    "ite",
     "ando",
-    "iendo",
-    // very common present/preterite endings (short list for recall)
-    "o",
-    "as",
-    "a",
-    "amos",
-    "an",
-    "es",
-    "e",
-    "emos",
-    "en",
-    "í",
-    "iste",
-    "ió",
-    "imos",
-    "ieron",
-    // infinitive recovery helper
-    "r",
-    "ar",
-    "er",
-    "ir",
+    "endo",
+
+    // common verb present endings (short recall set)
+    "o", // io
+    "i", // tu
+    "a", // lui/lei (-are)
+    "e", // lui/lei (-ere, -ire)
+    "iamo", // noi
+    "ate", // voi (-are)
+    "ete", // voi (-ere)
+    "ite", // voi (-ire)
+    "ano", // loro (-are)
+    "ono", // loro (-ere, -ire)
   ];
+
   suffixes.forEach((suffix) => {
     if (query.endsWith(suffix)) {
       variations.push(query.slice(0, -suffix.length));
@@ -1671,48 +1679,47 @@ function getCefrColor(cefrLevel) {
   }
 }
 
-// Utility function to generate word variations for verbs ending in -ere and handle adjective/noun forms
 function generateWordVariationsForSentences(word, pos) {
   const variations = [];
   const base = word.toLowerCase().trim();
 
   // Reflexive pronouns in Italian
-  const reflexivePronouns = ["me", "te", "se", "nos", "os"];
+  const reflexivePronouns = ["mi", "ti", "si", "ci", "vi"];
 
   // If it's a verb
   if (pos === "verb") {
-    if (base.endsWith("ar")) {
-      const stem = base.slice(0, -2);
+    if (base.endsWith("are")) {
+      const stem = base.slice(0, -3);
       variations.push(
         base, // infinitive
-        stem + "o", // yo hablo
-        stem + "as", // tú hablas
-        stem + "a", // él habla
-        stem + "amos", // nosotros hablamos
-        stem + "áis", // vosotros habláis
-        stem + "an" // ellos hablan
+        stem + "o", // io
+        stem + "i", // tu
+        stem + "a", // lui/lei
+        stem + "iamo", // noi
+        stem + "ate", // voi
+        stem + "ano" // loro
       );
-    } else if (base.endsWith("er")) {
-      const stem = base.slice(0, -2);
+    } else if (base.endsWith("ere")) {
+      const stem = base.slice(0, -3);
       variations.push(
         base,
-        stem + "o", // yo como
-        stem + "es", // tú comes
-        stem + "e", // él come
-        stem + "emos", // nosotros comemos
-        stem + "éis", // vosotros coméis
-        stem + "en" // ellos comen
+        stem + "o", // io
+        stem + "i", // tu
+        stem + "e", // lui/lei
+        stem + "iamo", // noi
+        stem + "ete", // voi
+        stem + "ono" // loro
       );
-    } else if (base.endsWith("ir")) {
-      const stem = base.slice(0, -2);
+    } else if (base.endsWith("ire")) {
+      const stem = base.slice(0, -3);
       variations.push(
         base,
-        stem + "o", // yo vivo
-        stem + "es", // tú vives
-        stem + "e", // él vive
-        stem + "imos", // nosotros vivimos
-        stem + "ís", // vosotros vivís
-        stem + "en" // ellos viven
+        stem + "o", // io
+        stem + "i", // tu
+        stem + "e", // lui/lei
+        stem + "iamo", // noi
+        stem + "ite", // voi
+        stem + "ono" // loro
       );
     } else {
       variations.push(base);
@@ -1724,21 +1731,20 @@ function generateWordVariationsForSentences(word, pos) {
     if (base.endsWith("o")) {
       // masculine pattern
       variations.push(
-        base, // libro
-        base.slice(0, -1) + "os" // libros
+        base,
+        base.slice(0, -1) + "i" // libri
       );
     } else if (base.endsWith("a")) {
       // feminine pattern
       variations.push(
-        base, // casa
-        base.slice(0, -1) + "as" // casas
+        base,
+        base.slice(0, -1) + "e" // case
       );
     } else if (base.endsWith("e")) {
-      // -e nouns: coche → coches
-      variations.push(base, base + "s");
+      // -e nouns go to -i
+      variations.push(base, base.slice(0, -1) + "i");
     } else {
-      // default pluralization with -es
-      variations.push(base, base + "es");
+      variations.push(base);
     }
   }
 
@@ -1749,23 +1755,26 @@ function generateWordVariationsForSentences(word, pos) {
       variations.push(
         stem + "o", // alto
         stem + "a", // alta
-        stem + "os", // altos
-        stem + "as" // altas
+        stem + "i", // alti
+        stem + "e" // alte
       );
-    } else if (base.endsWith("e") || base.endsWith("l") || base.endsWith("r")) {
-      // invariable in gender, just add plural
-      variations.push(base, base + "s", base + "es");
+    } else if (base.endsWith("e")) {
+      const stem = base.slice(0, -1);
+      variations.push(
+        stem + "e", // grande
+        stem + "i" // grandi
+      );
     } else {
       variations.push(base);
     }
   }
 
-  // Handle reflexive verbs (e.g. "lavarse")
-  if (base.endsWith("se") && pos === "verb") {
+  // Handle reflexive verbs (e.g. "lavarsi")
+  if (base.endsWith("si") && pos === "verb") {
     const infinitive = base.slice(0, -2); // "lavar"
     reflexivePronouns.forEach((pronoun) => {
       variations.push(infinitive + " " + pronoun);
-      variations.push(infinitive + pronoun); // joined form: lavarme, lavarte...
+      variations.push(infinitive + pronoun); // joined form: lavarmi, lavarti...
     });
   }
 
