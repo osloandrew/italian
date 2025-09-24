@@ -14,7 +14,7 @@ const SCHEMA_MAP = {
   gender: "articolo",
   uttale: null, // not in Italian CSV
   etymologi: null, // not in Italian CSV
-  definisjon: null,
+  definisjon: "definizione",
   eksempel: "esempio",
   sentenceTranslation: "traduzione",
   region: null, // optional extra; stored for future use
